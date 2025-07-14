@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "CopyKit",
+    "version": "1.0",
+    "description": "Copy HTML blocks, CSS, JS links, or full pages with hover and click—or instantly with one click.",
+    "permissions": ["scripting", "activeTab", "clipboardWrite", "storage"],
+    "host_permissions": ["<all_urls>"],
+    "action": {
+    "default_popup": "popup.html",
+    "default_title": "CopyKit",
+      "default_icon": {
+        "16": "icon48.png",
+        "48": "icon48.png",
+        "128": "icon48.png"
+      }
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "css": ["style.css"]
+        }
+    ]
+  }
