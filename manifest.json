@@ -3,7 +3,7 @@
     "name": "CopyKit",
     "version": "1.0",
     "description": "Copy HTML blocks, CSS, JS links, or full pages with hover and click—or instantly with one click.",
-    "permissions": ["scripting", "activeTab", "clipboardWrite", "storage"],
+    "permissions": ["scripting", "activeTab", "clipboardWrite"],
     "host_permissions": ["<all_urls>"],
     "action": {
     "default_popup": "popup.html",
