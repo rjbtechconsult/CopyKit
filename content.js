@@ -167,9 +167,28 @@
         
         // Update preview
         if (previewBox) {
+          const offset = 20;
+          const boxWidth = 400;
+          const boxHeight = window.innerHeight * 0.6;
+
+          let left = e.clientX + offset;
+          let top = e.clientY + offset;
+
+          // Adjust left if overflowing right edge
+          if (left + boxWidth > window.innerWidth) {
+            left = e.clientX - boxWidth - offset;
+            if (left < 0) left = 0;
+          }
+
+          // Adjust top if overflowing bottom edge
+          if (top + boxHeight > window.innerHeight) {
+            top = e.clientY - boxHeight - offset;
+            if (top < 0) top = 0;
+          }
+
           previewBox.style.display = 'block';
-          previewBox.style.top = `${e.clientY + 20}px`;
-          previewBox.style.left = `${e.clientX + 20}px`;
+          previewBox.style.left = `${left}px`;
+          previewBox.style.top = `${top}px`;
           previewBox.textContent = formatHTML(el.outerHTML);
         }
       }
@@ -185,14 +204,16 @@
       }
     }
   
-    function activate() {   
-        if (active) return;
-        active = true;
-        createOverlay();
-        createPreviewBox()
-        document.body.style.cursor = 'copy';
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('click', onClick, true);
+  function activate() {   
+      
+    if (active) return;
+      document.querySelectorAll('#copykit-preview-box').forEach(box => box.remove());
+      active = true;
+      createOverlay();
+      createPreviewBox()
+      document.body.style.cursor = 'copy';
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('click', onClick, true);
     }
   
     function deactivate() {
@@ -212,14 +233,21 @@
     }
   
     function createPreviewBox() {
+      // Reuse if it already exists
+      if (document.getElementById('copykit-preview-box')) {
+        previewBox = document.getElementById('copykit-preview-box');
+        return;
+      }
+
       previewBox = document.createElement('div');
       previewBox.id = 'copykit-preview-box';
 
       Object.assign(previewBox.style, {
         position: 'fixed',
-        maxWidth: '400px',
-        maxHeight: '60vh',
+        maxWidth: '500px',
+        maxHeight: '100vh',             // allow large preview, up to 80% of viewport
         overflowY: 'auto',
+        overflowX: 'auto',
         whiteSpace: 'pre-wrap',
         backgroundColor: '#1e1e1e',
         color: '#d4d4d4',
@@ -230,12 +258,14 @@
         padding: '10px',
         zIndex: '9999999',
         boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
         display: 'none',
       });
 
       document.body.appendChild(previewBox);
     }
+
+
 
     function formatHTML(html) {
         const tab = '  ';
